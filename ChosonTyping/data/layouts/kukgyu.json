@@ -1,0 +1,33 @@
+{
+  "name": "국규건반",
+  "id": "kukgyu",
+  "type": "dubeol",
+  "keys": {
+    "Q": { "base": "ㅂ", "shift": "ㅃ" },
+    "W": { "base": "ㅁ", "shift": null },
+    "E": { "base": "ㄷ", "shift": "ㄸ" },
+    "R": { "base": "ㄹ", "shift": null },
+    "T": { "base": "ㅎ", "shift": null },
+    "A": { "base": "ㅈ", "shift": "ㅉ" },
+    "S": { "base": "ㄱ", "shift": "ㄲ" },
+    "D": { "base": "ㅇ", "shift": null },
+    "F": { "base": "ㄴ", "shift": null },
+    "G": { "base": "ㅅ", "shift": "ㅆ" },
+    "Z": { "base": "ㅋ", "shift": null },
+    "X": { "base": "ㅌ", "shift": null },
+    "C": { "base": "ㅍ", "shift": null },
+    "V": { "base": "ㅊ", "shift": null },
+    "Y": { "base": "ㅕ", "shift": null },
+    "U": { "base": "ㅜ", "shift": null },
+    "I": { "base": "ㅓ", "shift": null },
+    "O": { "base": "ㅐ", "shift": "ㅒ" },
+    "P": { "base": "ㅔ", "shift": "ㅖ" },
+    "H": { "base": "ㅗ", "shift": null },
+    "J": { "base": "ㅏ", "shift": null },
+    "K": { "base": "ㅣ", "shift": null },
+    "L": { "base": "ㅡ", "shift": null },
+    "B": { "base": "ㅠ", "shift": null },
+    "N": { "base": "ㅛ", "shift": null },
+    "M": { "base": "ㅑ", "shift": null }
+  }
+}
