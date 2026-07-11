@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <None Include="data\**" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="Assets\**" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

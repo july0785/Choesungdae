@@ -1,6 +1,8 @@
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using ChosonTyping.Core;
 
 namespace ChosonTyping;
@@ -14,14 +16,82 @@ public partial class MainWindow : Window
         InitializeComponent();
         StateChanged += (_, _) =>
             Shell.Margin = WindowState == WindowState.Maximized ? new Thickness(7) : new Thickness(0);
+        ApplyTaskbarIcon();
+        UpdateLogo();
         Navigate(() => new Views.StartView(this));
+        if (App.StartupStage is int stage) NavigateStage(stage);
     }
 
-    /// <summary>화면 전환의 틀(설계서 3.1). 낮밤을 바꿀 때 다시 만들수 있게 만드는 법을 받는다.</summary>
+    /// <summary>개발용 지름길 — 설정된 배렬로 해당 련습화면을 바로 연다.</summary>
+    void NavigateStage(int stage)
+    {
+        var layout = Core.KeyboardLayout.Load(
+            System.IO.Path.Combine(AppConfig.LayoutsDir, AppConfig.Load().Layout + ".json"));
+        Navigate(stage switch
+        {
+            1 => () => new Views.WordView(this, layout),
+            2 => () => new Views.SentenceView(this, layout),
+            3 => (Func<UserControl>)(() => new Views.TextListView(this, layout, isTest: false)),
+            4 => () => new Views.TextListView(this, layout, isTest: true),
+            5 => () => new Views.AcidRainView(this, layout),
+            _ => () => new Views.KeyDrillView(this, layout),
+        });
+    }
+
+    /// <summary>화면 전환의 틀(설계서 3.1). 화면형식을 바꿀 때 다시 만들수 있게 만드는 법을 받는다.</summary>
     public void Navigate(Func<UserControl> factory)
     {
         _factory = factory;
         Host.Content = factory();
+    }
+
+    static string AssetsDir => Path.Combine(AppContext.BaseDirectory, "Assets");
+
+    static string? FindAsset(string baseName)
+    {
+        foreach (var ext in new[] { ".ico", ".png" })
+        {
+            var p = Path.Combine(AssetsDir, baseName + ext);
+            if (File.Exists(p)) return p;
+        }
+        return null;
+    }
+
+    /// <summary>작업표시줄 아이콘 — 작업표시줄이 어두우면 흰 아이콘, 밝으면 검은 아이콘.</summary>
+    void ApplyTaskbarIcon()
+    {
+        try
+        {
+            var path = FindAsset(SystemTheme.TaskbarUsesLight() ? "icon-square-black" : "icon-square-white");
+            if (path is not null)
+                Icon = BitmapFrame.Create(new Uri(path), BitmapCreateOptions.IgnoreImageCache, BitmapCacheOption.OnLoad);
+        }
+        catch (Exception)
+        {
+            // 아이콘이 깨져도 프로그람은 돈다.
+        }
+    }
+
+    /// <summary>창머리 로고 — 밝은 화면형식엔 검은 로고, 어두운 화면형식엔 흰 로고. 없으면 글자 워드마크.</summary>
+    public void UpdateLogo()
+    {
+        try
+        {
+            var path = FindAsset(App.ResolvedTheme == "dark" ? "logo-white" : "logo-black");
+            if (path is not null)
+            {
+                LogoImage.Source = BitmapFrame.Create(new Uri(path), BitmapCreateOptions.IgnoreImageCache, BitmapCacheOption.OnLoad);
+                LogoImage.Visibility = Visibility.Visible;
+                WordmarkText.Visibility = Visibility.Collapsed;
+                return;
+            }
+        }
+        catch (Exception)
+        {
+            // 로고가 깨지면 글자 워드마크로.
+        }
+        LogoImage.Visibility = Visibility.Collapsed;
+        WordmarkText.Visibility = Visibility.Visible;
     }
 
     void AppBar_MouseDown(object sender, MouseButtonEventArgs e)
@@ -40,9 +110,10 @@ public partial class MainWindow : Window
     void ThemeBtn_Click(object sender, RoutedEventArgs e)
     {
         var config = AppConfig.Load();
-        config.Theme = config.Theme == "dark" ? "light" : "dark";
+        config.Theme = App.ResolvedTheme == "dark" ? "light" : "dark";
         config.Save();
         App.ApplyTheme(config.Theme);
+        UpdateLogo();
         if (_factory is not null) Host.Content = _factory();
     }
 

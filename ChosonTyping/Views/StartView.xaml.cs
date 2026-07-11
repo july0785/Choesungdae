@@ -23,11 +23,11 @@ public partial class StartView : UserControl
     static readonly (string Name, string Desc, bool Enabled)[] Stages =
     {
         ("자리련습", "글쇠자리를 눈에 익히고 손에 익힙니다", true),
-        ("낱말련습", "화면에 나오는 낱말을 보고 정확히 칩니다", false),
-        ("짧은글련습", "짧은 문장을 되풀이해 치며 속도를 올립니다", false),
-        ("긴글련습", "가요의 가사를 처음부터 끝까지 따라 칩니다", false),
-        ("타자검정", "타자 속도와 정확도를 재여 급수를 매깁니다", false),
-        ("산성비", "떨어지는 낱말을 바닥에 닿기 전에 없앱니다", false),
+        ("낱말련습", "화면에 나오는 낱말을 보고 정확히 칩니다", true),
+        ("짧은글련습", "짧은 문장을 되풀이해 치며 속도를 올립니다", true),
+        ("긴글련습", "가요의 가사를 처음부터 끝까지 따라 칩니다", true),
+        ("타자검정", "타자 속도와 정확도를 재여 급수를 매깁니다", true),
+        ("산성비", "떨어지는 낱말을 바닥에 닿기 전에 없앱니다", true),
     };
 
     readonly MainWindow _main;
@@ -159,20 +159,29 @@ public partial class StartView : UserControl
             };
             if (enabled)
             {
+                int stageIndex = i;
                 border.Cursor = Cursors.Hand;
                 border.MouseEnter += (_, _) => border.Background = (Brush)FindResource("Soft");
                 border.MouseLeave += (_, _) => border.Background = Brushes.Transparent;
-                border.MouseLeftButtonUp += (_, _) => StartDrill();
+                border.MouseLeftButtonUp += (_, _) => StartStage(stageIndex);
             }
             StageList.Children.Add(border);
         }
     }
 
-    void StartDrill()
+    void StartStage(int stage)
     {
         var layout = _layouts.First(l => l.Id == _selectedId);
-        _main.Navigate(() => new KeyDrillView(_main, layout));
+        _main.Navigate(stage switch
+        {
+            1 => () => new WordView(_main, layout),
+            2 => () => new SentenceView(_main, layout),
+            3 => (Func<UserControl>)(() => new TextListView(_main, layout, isTest: false)),
+            4 => () => new TextListView(_main, layout, isTest: true),
+            5 => () => new AcidRainView(_main, layout),
+            _ => () => new KeyDrillView(_main, layout),
+        });
     }
 
-    void StartBtn_Click(object sender, RoutedEventArgs e) => StartDrill();
+    void StartBtn_Click(object sender, RoutedEventArgs e) => StartStage(0);
 }
