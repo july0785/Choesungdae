@@ -8,8 +8,11 @@ public sealed class AppConfig
 {
     public string Layout { get; set; } = "kukgyu";
 
-    /// <summary>화면 결: "light"(낮) 또는 "dark"(밤).</summary>
-    public string Theme { get; set; } = "light";
+    /// <summary>화면형식: "auto"(계통을 따름), "light"(밝은), "dark"(어두운).</summary>
+    public string Theme { get; set; } = "auto";
+
+    /// <summary>산성비 최고기록.</summary>
+    public int HighScore { get; set; }
 
     public static string DataDir => Path.Combine(AppContext.BaseDirectory, "data");
     public static string LayoutsDir => Path.Combine(DataDir, "layouts");

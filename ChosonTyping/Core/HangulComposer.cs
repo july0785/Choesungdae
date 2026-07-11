@@ -15,6 +15,9 @@ public sealed class HangulComposer
     /// <summary>지금 조합 중인 음절(없으면 빈 문자열).</summary>
     public string Composing { get; private set; } = "";
 
+    /// <summary>조합 중 음절의 글쇠 단위 자모들 — 진행 판정용.</summary>
+    public IReadOnlyList<char> ComposingUnits => _units;
+
     /// <summary>커밋된 글 + 조합 중 음절.</summary>
     public string Text => _committed + Composing;
 
