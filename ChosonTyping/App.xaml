@@ -27,9 +27,9 @@
                 <Setter Property="Foreground" Value="{DynamicResource Ink}"/>
             </Style>
 
-            <!-- 진홍 단추 — 화면의 유일한 강조 -->
-            <Style x:Key="RedButton" TargetType="Button">
-                <Setter Property="Background" Value="{DynamicResource Red}"/>
+            <!-- 청 단추 — 화면의 유일한 강조 -->
+            <Style x:Key="AccentButton" TargetType="Button">
+                <Setter Property="Background" Value="{DynamicResource Accent}"/>
                 <Setter Property="Foreground" Value="White"/>
                 <Setter Property="FontWeight" Value="Bold"/>
                 <Setter Property="FontSize" Value="15"/>
@@ -45,7 +45,7 @@
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="bd" Property="Background" Value="{DynamicResource RedDeep}"/>
+                                    <Setter TargetName="bd" Property="Background" Value="{DynamicResource AccentDeep}"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -110,7 +110,7 @@
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="bd" Property="Background" Value="{DynamicResource Red}"/>
+                                    <Setter TargetName="bd" Property="Background" Value="{DynamicResource Wrong}"/>
                                     <Setter Property="Foreground" Value="White"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>

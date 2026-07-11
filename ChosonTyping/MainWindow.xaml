@@ -22,7 +22,7 @@
                 <DockPanel>
                     <TextBlock DockPanel.Dock="Left" FontSize="15" FontWeight="ExtraBold"
                                Foreground="{DynamicResource Ink}" VerticalAlignment="Center">
-                        <Run Text="최승대"/><Run Text="." Foreground="{DynamicResource Red}"/>
+                        <Run Text="최승대"/><Run Text="." Foreground="{DynamicResource Accent}"/>
                     </TextBlock>
                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
                         <TextBlock FontSize="12" Foreground="{DynamicResource Faint}"

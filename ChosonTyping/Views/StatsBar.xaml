@@ -21,7 +21,7 @@
             <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="20,0,0,0">
                 <Border x:Name="Track" Height="4" CornerRadius="2" Background="{DynamicResource Hair}">
                     <Border x:Name="Fill" Height="4" CornerRadius="2" HorizontalAlignment="Left"
-                            Background="{DynamicResource Blue}" Width="0"/>
+                            Background="{DynamicResource Sky}" Width="0"/>
                 </Border>
                 <TextBlock x:Name="ProgText" FontSize="11" Foreground="{DynamicResource Mid}"
                            Margin="0,6,0,0" Text="진행률 0%"/>

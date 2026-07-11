@@ -116,8 +116,8 @@ public partial class KeyboardControl : UserControl
             _next = null;
         }
         if (tok is null || !_keys.TryGetValue(tok, out var bd)) return;
-        bd.Background = (Brush)FindResource("Red");
-        bd.BorderBrush = (Brush)FindResource("Red");
+        bd.Background = (Brush)FindResource("Accent");
+        bd.BorderBrush = (Brush)FindResource("Accent");
         foreach (TextBlock t in ((Grid)bd.Child).Children) t.Foreground = Brushes.White;
         _next = bd;
     }

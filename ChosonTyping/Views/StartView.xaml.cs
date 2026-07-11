@@ -71,7 +71,7 @@ public partial class StartView : UserControl
             };
             var dot = new Ellipse
             {
-                Width = 8, Height = 8, Fill = (Brush)FindResource("Blue"),
+                Width = 8, Height = 8, Fill = (Brush)FindResource("Sky"),
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Top,
                 Visibility = Visibility.Collapsed,
@@ -105,7 +105,7 @@ public partial class StartView : UserControl
         foreach (var (cardId, (card, dot)) in _cards)
         {
             bool sel = cardId == id;
-            card.BorderBrush = (Brush)FindResource(sel ? "Blue" : "Hair");
+            card.BorderBrush = (Brush)FindResource(sel ? "Sky" : "Hair");
             dot.Visibility = sel ? Visibility.Visible : Visibility.Collapsed;
         }
         if (save)

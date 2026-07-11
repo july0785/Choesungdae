@@ -13,7 +13,7 @@
             <TextBlock Style="{StaticResource Label}" Text="련습단계" Margin="0,28,0,10"/>
             <StackPanel x:Name="StageList"/>
 
-            <Button x:Name="StartBtn" Style="{StaticResource RedButton}" Content="련습 시작"
+            <Button x:Name="StartBtn" Style="{StaticResource AccentButton}" Content="련습 시작"
                     HorizontalAlignment="Left" Margin="0,26,0,0" Click="StartBtn_Click"/>
         </StackPanel>
     </ScrollViewer>

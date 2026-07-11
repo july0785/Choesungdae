@@ -83,7 +83,7 @@ public partial class KeyDrillView : UserControl
 
         string finger = FingerMap.For(tok);
         HintText.Inlines.Clear();
-        HintText.Inlines.Add(new Run(finger) { Foreground = (Brush)FindResource("Red"), FontWeight = FontWeights.Bold });
+        HintText.Inlines.Add(new Run(finger) { Foreground = (Brush)FindResource("Accent"), FontWeight = FontWeights.Bold });
         HintText.Inlines.Add(new Run($"손가락 — {tok} 자리") { Foreground = (Brush)FindResource("Mid") });
 
         Kb.SetNext(tok);
@@ -118,7 +118,7 @@ public partial class KeyDrillView : UserControl
                     new TextDecoration
                     {
                         Location = TextDecorationLocation.Underline,
-                        Pen = new Pen((Brush)FindResource("Red"), 2),
+                        Pen = new Pen((Brush)FindResource("Accent"), 2),
                         PenOffset = 2,
                     },
                 };
@@ -172,10 +172,10 @@ public partial class KeyDrillView : UserControl
         UpdateStats();
     }
 
-    /// <summary>틀리면 큰 자모가 잠깐 빨강 — 틀림은 빨강(설계서 11.3).</summary>
+    /// <summary>틀리면 큰 자모가 잠깐 빨강 — 틀림은 빨강(설계서 11.3, 기능색으로만 남김).</summary>
     void FlashWrong()
     {
-        BigJamo.Foreground = (Brush)FindResource("Red");
+        BigJamo.Foreground = (Brush)FindResource("Wrong");
         var t = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(180) };
         t.Tick += (_, _) =>
         {
@@ -238,7 +238,7 @@ public partial class KeyDrillView : UserControl
                 bar.Fill = (Brush)FindResource("Hair");
         if (finger.Length > 0 && _fingerBars.TryGetValue(finger, out var active))
             foreach (var bar in active)
-                bar.Fill = (Brush)FindResource("Red");
+                bar.Fill = (Brush)FindResource("Accent");
         HandCap.Text = finger.Length > 0 ? finger : "";
     }
 
