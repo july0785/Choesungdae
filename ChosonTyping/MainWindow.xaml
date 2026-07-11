@@ -16,7 +16,7 @@
         <DockPanel>
             <!-- 창머리: 프로그람이 창을 통째로 덮는다 — 끌기·화면형식·줄이기·키우기·닫기 -->
             <Border DockPanel.Dock="Top" BorderBrush="{DynamicResource Hair}"
-                    BorderThickness="0,0,0,1" Padding="40,10,10,10"
+                    BorderThickness="0,0,0,1" Padding="16,10,10,10"
                     Background="{DynamicResource Paper}"
                     MouseLeftButtonDown="AppBar_MouseDown">
                 <DockPanel>
