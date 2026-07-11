@@ -83,10 +83,8 @@ public partial class SentenceView : UserControl
         PrevLine.Text = "";
         TargetLine.Inlines.Clear();
         TargetLine.Inlines.Add(new Run("끝!") { Foreground = (Brush)FindResource("Ink"), FontWeight = FontWeights.ExtraBold });
-        TypedLine.Inlines.Clear();
-        TypedLine.Inlines.Add(new Run($"타속 {cpm:0} 타/분 · 정확도 {acc:0} %") { Foreground = (Brush)FindResource("Mid") });
-        NextLine.Text = "다시 — 넣기(Enter) · 시작화면 — Esc";
-        NextLine2.Text = "";
+        NextLine.Text = $"타속 {cpm:0} 타/분 · 정확도 {acc:0} %";
+        NextLine2.Text = "다시 — 넣기(Enter) · 시작화면 — Esc";
         Kb.SetNext(null);
         ViewFx.SlideIn(LyricStack);
         Stats.Update(cpm, acc, 100);
@@ -148,45 +146,42 @@ public partial class SentenceView : UserControl
 
     void Refresh()
     {
-        RenderLines(_session, TargetLine, TypedLine, this);
+        RenderOverlay(_session, TargetLine, this);
         var next = _session.NextKey();
         Kb.SetNext(next?.Token);
         UpdateStats();
     }
 
-    /// <summary>본보기줄(형편별 색)과 친 줄(틀린 곳만 빨강 + 초리)을 그린다 — 긴글도 같이 쓴다.</summary>
-    internal static void RenderLines(TypingSession session, TextBlock targetLine, TextBlock typedLine, FrameworkElement res)
+    /// <summary>
+    /// 겹쳐쓰기 한 줄: 흐린 회색 본보기 우에 친 글이 얹힌다 — 낱말·긴글도 같이 쓴다.
+    /// 맞으면(조합 중인 옳은 진행 포함) 또렷한 색, 틀리면 빨강. 아직 안 친 자리는 흐린 회색.
+    /// 틀림은 입력중이든 아니든 틀림으로 본다(StateAt이 옳은 진행만 봐줌).
+    /// </summary>
+    internal static void RenderOverlay(TypingSession session, TextBlock line, FrameworkElement res)
     {
         string target = session.Target;
         string typed = session.Typed;
-
-        targetLine.Inlines.Clear();
-        for (int i = 0; i < target.Length; i++)
+        line.Inlines.Clear();
+        int n = Math.Max(target.Length, typed.Length);
+        for (int i = 0; i < n; i++)
         {
-            var state = session.StateAt(i);
-            var run = new Run(target[i].ToString())
+            if (i == typed.Length)
+                line.Inlines.Add(new Run("▏") { Foreground = (Brush)res.FindResource("Accent") });
+            if (i < typed.Length)
             {
-                Foreground = (Brush)res.FindResource(state switch
+                bool wrong = session.StateAt(i) == CharState.Wrong;
+                line.Inlines.Add(new Run(typed[i].ToString())
                 {
-                    CharState.Correct => "Ink",
-                    CharState.Wrong => "Wrong",
-                    CharState.Composing => "Ink",
-                    _ => "Faint",
-                }),
-            };
-            targetLine.Inlines.Add(run);
-        }
-
-        typedLine.Inlines.Clear();
-        for (int i = 0; i < typed.Length; i++)
-        {
-            var state = session.StateAt(i);
-            typedLine.Inlines.Add(new Run(typed[i].ToString())
+                    Foreground = (Brush)res.FindResource(wrong ? "Wrong" : "Ink"),
+                });
+            }
+            else
             {
-                Foreground = (Brush)res.FindResource(state == CharState.Wrong ? "Wrong" : "Mid"),
-            });
+                line.Inlines.Add(new Run(target[i].ToString()) { Foreground = (Brush)res.FindResource("Faint") });
+            }
         }
-        typedLine.Inlines.Add(new Run("▏") { Foreground = (Brush)res.FindResource("Sky") });
+        if (typed.Length >= n)
+            line.Inlines.Add(new Run("▏") { Foreground = (Brush)res.FindResource("Accent") });
     }
 
     void UpdateStats()

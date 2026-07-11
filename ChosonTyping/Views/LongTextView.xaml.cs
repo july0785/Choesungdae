@@ -100,10 +100,8 @@ public partial class LongTextView : UserControl
             Foreground = (Brush)FindResource("Ink"),
             FontWeight = FontWeights.ExtraBold,
         });
-        TypedLine.Inlines.Clear();
-        TypedLine.Inlines.Add(new Run($"타속 {cpm:0} 타/분 · 정확도 {acc:0} %") { Foreground = (Brush)FindResource("Mid") });
-        NextLine.Text = "다시 — 넣기(Enter) · 글 고르기 — Esc";
-        NextLine2.Text = "";
+        NextLine.Text = $"타속 {cpm:0} 타/분 · 정확도 {acc:0} %";
+        NextLine2.Text = "다시 — 넣기(Enter) · 글 고르기 — Esc";
         Kb.SetNext(null);
         ViewFx.SlideIn(LyricStack);
         Stats.Update(cpm, acc, 100);
@@ -165,7 +163,7 @@ public partial class LongTextView : UserControl
 
     void Refresh()
     {
-        SentenceView.RenderLines(_session, TargetLine, TypedLine, this);
+        SentenceView.RenderOverlay(_session, TargetLine, this);
         var next = _session.NextKey();
         Kb.SetNext(next?.Token);
         UpdateStats();

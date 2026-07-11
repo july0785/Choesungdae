@@ -59,7 +59,6 @@ public partial class WordView : UserControl
         TitleText.Text = "낱말련습";
         TargetText.Inlines.Clear();
         TargetText.Inlines.Add(new Run("낱말이 아직 없습니다") { Foreground = (Brush)FindResource("Faint") });
-        TypedText.Inlines.Clear();
         HintText.Text = "시작화면 — Esc";
         Kb.SetNext(null);
     }
@@ -85,7 +84,6 @@ public partial class WordView : UserControl
         _watch.Stop();
         TargetText.Inlines.Clear();
         TargetText.Inlines.Add(new Run("끝!") { Foreground = (Brush)FindResource("Ink") });
-        TypedText.Inlines.Clear();
         HintText.Text = "다시 — 넣기(Enter) · 시작화면 — Esc";
         Kb.SetNext(null);
         ViewFx.SlideIn(WordStack);
@@ -153,7 +151,7 @@ public partial class WordView : UserControl
 
     void Refresh()
     {
-        SentenceView.RenderLines(_session, TargetText, TypedText, this);
+        SentenceView.RenderOverlay(_session, TargetText, this);
         var next = _session.NextKey();
         Kb.SetNext(next?.Token);
         UpdateStats();

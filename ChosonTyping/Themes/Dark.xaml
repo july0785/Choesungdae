@@ -10,5 +10,5 @@
     <SolidColorBrush x:Key="Accent"     Color="#4577B5"/>
     <SolidColorBrush x:Key="AccentDeep" Color="#5C8CC9"/>
     <SolidColorBrush x:Key="Sky"        Color="#7FA6D2"/>
-    <SolidColorBrush x:Key="Wrong"      Color="#7C726B"/>
+    <SolidColorBrush x:Key="Wrong"      Color="#D9544E"/>
 </ResourceDictionary>
