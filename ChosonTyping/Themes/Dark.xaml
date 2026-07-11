@@ -1,0 +1,13 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- 어두운 화면 — 먹 바탕, 같은 진홍·남빛을 조도만 올려서 -->
+    <SolidColorBrush x:Key="Paper"   Color="#16130F"/>
+    <SolidColorBrush x:Key="Ink"     Color="#ECE7DF"/>
+    <SolidColorBrush x:Key="Mid"     Color="#9C948A"/>
+    <SolidColorBrush x:Key="Faint"   Color="#6A6259"/>
+    <SolidColorBrush x:Key="Hair"    Color="#2C2721"/>
+    <SolidColorBrush x:Key="Soft"    Color="#201C17"/>
+    <SolidColorBrush x:Key="Red"     Color="#D24B51"/>
+    <SolidColorBrush x:Key="RedDeep" Color="#E06A6F"/>
+    <SolidColorBrush x:Key="Blue"    Color="#7B9CC7"/>
+</ResourceDictionary>

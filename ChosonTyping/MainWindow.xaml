@@ -1,22 +1,45 @@
 <Window x:Class="ChosonTyping.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="조선어 타자련습기" Width="1100" Height="800"
+        Title="최승대" Width="1100" Height="800"
         MinWidth="980" MinHeight="700"
-        Background="{StaticResource Paper}" FontFamily="{StaticResource Main}"
+        WindowStyle="None" ResizeMode="CanResize"
+        Background="{DynamicResource Paper}" FontFamily="{StaticResource Main}"
         WindowStartupLocation="CenterScreen">
-    <DockPanel>
-        <Border DockPanel.Dock="Top" BorderBrush="{StaticResource Hair}"
-                BorderThickness="0,0,0,1" Padding="40,16">
-            <DockPanel>
-                <TextBlock DockPanel.Dock="Left" FontSize="15" FontWeight="ExtraBold"
-                           Foreground="{StaticResource Ink}">
-                    <Run Text="조선어 타자련습기"/><Run Text="." Foreground="{StaticResource Red}"/>
-                </TextBlock>
-                <TextBlock HorizontalAlignment="Right" FontSize="12"
-                           Foreground="{StaticResource Faint}" Text="판 0.1 · 포터블"/>
-            </DockPanel>
-        </Border>
-        <ContentControl x:Name="Host"/>
-    </DockPanel>
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="6"
+                      GlassFrameThickness="0" UseAeroCaptionButtons="False"/>
+    </WindowChrome.WindowChrome>
+
+    <Border x:Name="Shell" BorderBrush="{DynamicResource Hair}" BorderThickness="1"
+            Background="{DynamicResource Paper}">
+        <DockPanel>
+            <!-- 창머리: 프로그람이 창을 통째로 덮는다 — 끌기·낮밤·줄이기·키우기·닫기 -->
+            <Border DockPanel.Dock="Top" BorderBrush="{DynamicResource Hair}"
+                    BorderThickness="0,0,0,1" Padding="40,10,10,10"
+                    Background="{DynamicResource Paper}"
+                    MouseLeftButtonDown="AppBar_MouseDown">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Left" FontSize="15" FontWeight="ExtraBold"
+                               Foreground="{DynamicResource Ink}" VerticalAlignment="Center">
+                        <Run Text="최승대"/><Run Text="." Foreground="{DynamicResource Red}"/>
+                    </TextBlock>
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock FontSize="12" Foreground="{DynamicResource Faint}"
+                                   Text="판 0.2 · 포터블" VerticalAlignment="Center" Margin="0,0,18,0"/>
+                        <Button x:Name="ThemeBtn" Style="{StaticResource CaptionButton}"
+                                Content="◐" ToolTip="낮 / 밤" Click="ThemeBtn_Click"/>
+                        <Button Style="{StaticResource CaptionButton}" Content="─"
+                                ToolTip="줄이기" Click="MinBtn_Click"/>
+                        <Button Style="{StaticResource CaptionButton}" Content="□"
+                                ToolTip="키우기" Click="MaxBtn_Click"/>
+                        <Button Style="{StaticResource CloseButton}" Content="✕"
+                                ToolTip="닫기" Click="CloseBtn_Click"/>
+                    </StackPanel>
+                    <Border/>
+                </DockPanel>
+            </Border>
+            <ContentControl x:Name="Host"/>
+        </DockPanel>
+    </Border>
 </Window>

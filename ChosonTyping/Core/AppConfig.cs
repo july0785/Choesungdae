@@ -8,6 +8,9 @@ public sealed class AppConfig
 {
     public string Layout { get; set; } = "kukgyu";
 
+    /// <summary>화면 결: "light"(낮) 또는 "dark"(밤).</summary>
+    public string Theme { get; set; } = "light";
+
     public static string DataDir => Path.Combine(AppContext.BaseDirectory, "data");
     public static string LayoutsDir => Path.Combine(DataDir, "layouts");
     static string ConfigPath => Path.Combine(DataDir, "config.json");

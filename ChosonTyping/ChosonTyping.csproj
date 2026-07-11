@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-    <AssemblyName>ChosonTyping</AssemblyName>
+    <AssemblyName>Choseungdae</AssemblyName>
     <RootNamespace>ChosonTyping</RootNamespace>
   </PropertyGroup>
 

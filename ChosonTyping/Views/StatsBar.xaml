@@ -1,7 +1,7 @@
 <UserControl x:Class="ChosonTyping.Views.StatsBar"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Border BorderBrush="{StaticResource Hair}" BorderThickness="0,1,0,0" Padding="40,14">
+    <Border BorderBrush="{DynamicResource Hair}" BorderThickness="0,1,0,0" Padding="40,14">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -11,19 +11,19 @@
             <StackPanel Grid.Column="0" Margin="0,0,36,0">
                 <TextBlock Style="{StaticResource Label}" Text="타속"/>
                 <TextBlock x:Name="CpmText" FontSize="21" FontWeight="ExtraBold"
-                           Foreground="{StaticResource Ink}" Text="0 타/분"/>
+                           Foreground="{DynamicResource Ink}" Text="0 타/분"/>
             </StackPanel>
             <StackPanel Grid.Column="1" Margin="0,0,36,0">
                 <TextBlock Style="{StaticResource Label}" Text="정확도"/>
                 <TextBlock x:Name="AccText" FontSize="21" FontWeight="ExtraBold"
-                           Foreground="{StaticResource Ink}" Text="100 %"/>
+                           Foreground="{DynamicResource Ink}" Text="100 %"/>
             </StackPanel>
             <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="20,0,0,0">
-                <Border x:Name="Track" Height="4" CornerRadius="2" Background="{StaticResource Hair}">
+                <Border x:Name="Track" Height="4" CornerRadius="2" Background="{DynamicResource Hair}">
                     <Border x:Name="Fill" Height="4" CornerRadius="2" HorizontalAlignment="Left"
-                            Background="{StaticResource Ink}" Width="0"/>
+                            Background="{DynamicResource Blue}" Width="0"/>
                 </Border>
-                <TextBlock x:Name="ProgText" FontSize="11" Foreground="{StaticResource Mid}"
+                <TextBlock x:Name="ProgText" FontSize="11" Foreground="{DynamicResource Mid}"
                            Margin="0,6,0,0" Text="진행률 0%"/>
             </StackPanel>
         </Grid>

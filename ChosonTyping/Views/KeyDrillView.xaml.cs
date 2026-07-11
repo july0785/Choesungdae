@@ -242,7 +242,7 @@ public partial class KeyDrillView : UserControl
         HandCap.Text = finger.Length > 0 ? finger : "";
     }
 
-    void GoBack() => _main.Navigate(new StartView(_main));
+    void GoBack() => _main.Navigate(() => new StartView(_main));
 
     void BackBtn_Click(object sender, RoutedEventArgs e) => GoBack();
 }

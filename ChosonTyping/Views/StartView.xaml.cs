@@ -22,11 +22,12 @@ public partial class StartView : UserControl
 
     static readonly (string Name, string Desc, bool Enabled)[] Stages =
     {
-        ("자리련습", "기본자리부터 차근차근 — 손가락 안내와 함께", true),
-        ("낱말련습", "떨어지는 조선 낱말을 받아치기 (B단계에서)", false),
-        ("짧은글", "문장을 따라치며 타속·정확도 재기 (B단계에서)", false),
-        ("긴글", "타자검정 · 외부 글 불러오기 (B단계에서)", false),
-        ("게임", "바닥에 닿기 전에 쳐서 없애기 (C단계에서)", false),
+        ("자리련습", "글쇠자리를 눈에 익히고 손에 익힙니다", true),
+        ("낱말련습", "화면에 나오는 낱말을 보고 정확히 칩니다", false),
+        ("짧은글련습", "짧은 문장을 되풀이해 치며 속도를 올립니다", false),
+        ("긴글련습", "가요의 가사를 처음부터 끝까지 따라 칩니다", false),
+        ("타자검정", "타자 속도와 정확도를 재여 급수를 매깁니다", false),
+        ("산성비", "떨어지는 낱말을 바닥에 닿기 전에 없앱니다", false),
     };
 
     readonly MainWindow _main;
@@ -70,7 +71,7 @@ public partial class StartView : UserControl
             };
             var dot = new Ellipse
             {
-                Width = 8, Height = 8, Fill = (Brush)FindResource("Red"),
+                Width = 8, Height = 8, Fill = (Brush)FindResource("Blue"),
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Top,
                 Visibility = Visibility.Collapsed,
@@ -104,10 +105,15 @@ public partial class StartView : UserControl
         foreach (var (cardId, (card, dot)) in _cards)
         {
             bool sel = cardId == id;
-            card.BorderBrush = (Brush)FindResource(sel ? "Red" : "Hair");
+            card.BorderBrush = (Brush)FindResource(sel ? "Blue" : "Hair");
             dot.Visibility = sel ? Visibility.Visible : Visibility.Collapsed;
         }
-        if (save) new AppConfig { Layout = id }.Save();
+        if (save)
+        {
+            var config = AppConfig.Load();
+            config.Layout = id;
+            config.Save();
+        }
     }
 
     void BuildStages()
@@ -123,17 +129,19 @@ public partial class StartView : UserControl
             });
             row.Children.Add(new TextBlock
             {
-                Text = name, FontSize = 15, FontWeight = FontWeights.Bold, Width = 110,
+                Text = name, FontSize = 15, FontWeight = FontWeights.Bold, Width = 120,
                 Foreground = (Brush)FindResource(enabled ? "Ink" : "Faint"),
                 VerticalAlignment = VerticalAlignment.Center,
             });
-            var arrow = new TextBlock
+            var tail = new TextBlock
             {
-                Text = "→", FontSize = 14, Foreground = (Brush)FindResource("Faint"),
+                Text = enabled ? "→" : "준비중",
+                FontSize = enabled ? 14 : 11,
+                Foreground = (Brush)FindResource("Faint"),
                 HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Center,
             };
-            DockPanel.SetDock(arrow, Dock.Right);
-            row.Children.Add(arrow);
+            DockPanel.SetDock(tail, Dock.Right);
+            row.Children.Add(tail);
             row.Children.Add(new TextBlock
             {
                 Text = desc, FontSize = 13,
@@ -163,7 +171,7 @@ public partial class StartView : UserControl
     void StartDrill()
     {
         var layout = _layouts.First(l => l.Id == _selectedId);
-        _main.Navigate(new KeyDrillView(_main, layout));
+        _main.Navigate(() => new KeyDrillView(_main, layout));
     }
 
     void StartBtn_Click(object sender, RoutedEventArgs e) => StartDrill();
