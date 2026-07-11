@@ -47,8 +47,7 @@
                                Foreground="{DynamicResource Ink}" HorizontalAlignment="Center"
                                MinHeight="30" Padding="0,0,0,6"/>
                 </Border>
-                <TextBlock Text="낱말을 쳐서 없애십시오 — 바닥에 닿으면 목숨이 줄어듭니다" FontSize="12"
-                           Foreground="{DynamicResource Faint}" HorizontalAlignment="Center" Margin="0,0,0,14"/>
+                <Border Height="14"/>
 
                 <views:KeyboardControl x:Name="Kb"/>
             </StackPanel>

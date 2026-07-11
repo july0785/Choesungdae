@@ -19,13 +19,23 @@
                                Foreground="{DynamicResource Mid}" VerticalAlignment="Center"/>
                 </Grid>
 
-                <TextBlock x:Name="TargetLine" FontSize="30" FontWeight="SemiBold"
-                           HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"
-                           Margin="0,30,0,10"/>
-                <TextBlock x:Name="NextLine" FontSize="15" Foreground="{DynamicResource Faint}"
-                           HorizontalAlignment="Center" Margin="0,0,0,8" TextWrapping="Wrap"/>
-                <TextBlock x:Name="HintText" FontSize="12.5" HorizontalAlignment="Center"
-                           Foreground="{DynamicResource Faint}" Margin="0,0,0,20"/>
+                <!-- 가사식 줄무더기: 지난 줄은 우로 흐리게, 다음 줄들은 아래로 점점 흐리게 -->
+                <StackPanel x:Name="LyricStack" Margin="0,20,0,14">
+                    <TextBlock x:Name="PrevLine" FontSize="15" Opacity="0.5"
+                               Foreground="{DynamicResource Mid}" HorizontalAlignment="Center"
+                               TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,12"/>
+                    <TextBlock x:Name="TargetLine" FontSize="30" FontWeight="SemiBold"
+                               HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"/>
+                    <TextBlock x:Name="TypedLine" FontSize="20" MinHeight="30"
+                               HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"
+                               Margin="0,12,0,0"/>
+                    <TextBlock x:Name="NextLine" FontSize="15" Foreground="{DynamicResource Faint}"
+                               HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"
+                               Margin="0,20,0,0"/>
+                    <TextBlock x:Name="NextLine2" FontSize="13" Opacity="0.55"
+                               Foreground="{DynamicResource Faint}" HorizontalAlignment="Center"
+                               TextWrapping="Wrap" TextAlignment="Center" Margin="0,7,0,0"/>
+                </StackPanel>
 
                 <views:KeyboardControl x:Name="Kb"/>
             </StackPanel>

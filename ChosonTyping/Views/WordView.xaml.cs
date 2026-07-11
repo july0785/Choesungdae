@@ -62,7 +62,8 @@ public partial class WordView : UserControl
         }
         _session = new TypingSession(_words[_index], _layout);
         TitleText.Text = $"낱말련습 · {_index + 1}/{_words.Count}";
-        HintText.Text = "낱말을 그대로 치면 다음으로 넘어갑니다 · 지우기 = 한 타 되돌리기";
+        HintText.Text = "";
+        ViewFx.SlideIn(WordStack);
         Refresh();
     }
 
@@ -72,9 +73,10 @@ public partial class WordView : UserControl
         _watch.Stop();
         TargetText.Inlines.Clear();
         TargetText.Inlines.Add(new Run("끝!") { Foreground = (Brush)FindResource("Ink") });
-        TypedText.Text = "";
+        TypedText.Inlines.Clear();
         HintText.Text = "다시 — 넣기(Enter) · 시작화면 — Esc";
         Kb.SetNext(null);
+        ViewFx.SlideIn(WordStack);
     }
 
     void OnKey(object sender, KeyEventArgs e)
@@ -139,21 +141,7 @@ public partial class WordView : UserControl
 
     void Refresh()
     {
-        string target = _session.Target;
-        string typed = _session.Typed;
-
-        TargetText.Inlines.Clear();
-        for (int i = 0; i < target.Length; i++)
-        {
-            var run = new Run(target[i].ToString());
-            if (i < typed.Length)
-                run.Foreground = (Brush)FindResource(typed[i] == target[i] ? "Ink" : "Wrong");
-            else
-                run.Foreground = (Brush)FindResource("Faint");
-            TargetText.Inlines.Add(run);
-        }
-        TypedText.Text = typed.Length == 0 ? " " : typed;
-
+        SentenceView.RenderLines(_session, TargetText, TypedText, this);
         var next = _session.NextKey();
         Kb.SetNext(next?.Token);
         UpdateStats();

@@ -65,6 +65,35 @@ public class TypingSessionTests
     }
 
     [Fact]
+    public void 도깨비불_과도상태는_틀림이_아니다()
+    {
+        // 《구수》: ㅅ이 잠시 앞 글자 받침으로 붙어 《굿》이 되지만 옳은 진행이다.
+        var s = new TypingSession("구수", Layout("kukgyu"));
+        s.Feed("S", false);                       // ㄱ
+        s.Feed("U", false);                       // ㅜ → 구
+        s.Feed("G", false);                       // ㅅ → 굿 (과도 상태)
+        Assert.Equal("굿", s.Typed);
+        Assert.Equal(CharState.Composing, s.StateAt(0));   // 빨간불이 아니라 조합 중
+        Assert.Equal(("U", false), s.NextKey());           // 다음은 ㅜ
+        s.Feed("U", false);                       // → 구수
+        Assert.True(s.Done);
+    }
+
+    [Fact]
+    public void 조합중_틀린_자모는_틀림으로_보인다()
+    {
+        var s = new TypingSession("구수", Layout("kukgyu"));
+        s.Feed("S", false);
+        s.Feed("U", false);                       // 구
+        s.Feed("G", false);                       // 굿 (과도)
+        s.Feed("K", false);                       // ㅣ → 도깨비불로 《시》 — 틀림
+        Assert.Equal("구시", s.Typed);
+        Assert.Equal(CharState.Correct, s.StateAt(0));
+        Assert.Equal(CharState.Wrong, s.StateAt(1));
+        Assert.Null(s.NextKey());
+    }
+
+    [Fact]
     public void 사이띄기와_구두점도_계획된다()
     {
         var s = new TypingSession("가 나.", Layout("kukgyu"));

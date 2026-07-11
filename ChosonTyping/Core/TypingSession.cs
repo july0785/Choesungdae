@@ -1,15 +1,24 @@
 namespace ChosonTyping.Core;
 
+/// <summary>글자 하나의 형편(설계서 11.3): 안 침 / 맞음 / 틀림 / 조합 중.</summary>
+public enum CharState
+{
+    Untyped,
+    Correct,
+    Wrong,
+    Composing,
+}
+
 /// <summary>
 /// 본보기글 하나를 치는 한판 — 조합기·글쇠계획·측정을 한데 묶는다.
-/// 낱말련습·짧은글련습·긴글련습·타자검정이 같이 쓴다.
-/// 막지 않는다: 틀린 자모도 조합기에 들어가고, 색으로만 표시한다(설계서 11.3).
+/// 진행 판정은 글쇠 단위의 평면 대조로 한다. 받침이 다음 글자 몫으로
+/// 잠시 붙는 도깨비불 과도 상태(례: 구수를 칠 때의 《굿》)도 옳은 진행으로 본다.
 /// </summary>
 public sealed class TypingSession
 {
     readonly KeyboardLayout _layout;
     readonly List<List<KeyUnit>> _plan;
-    readonly int _totalUnits;
+    readonly List<KeyUnit> _flat;
 
     public string Target { get; }
     public HangulComposer Composer { get; } = new();
@@ -20,13 +29,13 @@ public sealed class TypingSession
         Target = target;
         _layout = layout;
         _plan = KeystrokePlanner.PlanText(target, layout);
-        _totalUnits = _plan.Sum(u => u.Count);
+        _flat = _plan.SelectMany(u => u).ToList();
     }
 
     public string Typed => Composer.Text;
     public bool Done => Typed == Target;
 
-    /// <summary>정확도(%) — 친 자리의 마지막 상태 기준(설계서 11.1).</summary>
+    /// <summary>정확도(%) — 친 자리의 마지막 상태 기준(설계서 11.2).</summary>
     public double PositionalAccuracy => TypingStats.Accuracy(Target, Typed);
 
     /// <summary>진행률(%).</summary>
@@ -68,21 +77,15 @@ public sealed class TypingSession
     public (string Token, bool Shift)? NextKey()
     {
         int consumed = CorrectUnits(out bool allCorrect);
-        if (!allCorrect || consumed >= _totalUnits) return null;
-        int acc = 0;
-        foreach (var units in _plan)
-        {
-            if (consumed < acc + units.Count)
-            {
-                var u = units[consumed - acc];
-                return (u.Token, u.Shift);
-            }
-            acc += units.Count;
-        }
-        return null;
+        if (!allCorrect || consumed >= _flat.Count) return null;
+        var u = _flat[consumed];
+        return (u.Token, u.Shift);
     }
 
-    /// <summary>옳게 진행된 글쇠 단위수. 조합 중 음절은 단위 접두사가 맞을 때만 센다.</summary>
+    /// <summary>
+    /// 옳게 진행된 글쇠 단위수. 커밋된 글자는 글자로, 조합 중 음절은
+    /// 단위 자모를 평면 계획에 대고 잰다(글자 경계를 넘는 과도 상태 포함).
+    /// </summary>
     public int CorrectUnits(out bool allCorrect)
     {
         allCorrect = true;
@@ -103,22 +106,11 @@ public sealed class TypingSession
 
         if (composingLen > 0)
         {
-            int i = fullChars;
-            if (i >= Target.Length)
-            {
-                allCorrect = false;
-                return units;
-            }
-            var planUnits = _plan[i];
             var cur = Composer.ComposingUnits;
-            if (cur.Count > planUnits.Count)
-            {
-                allCorrect = false;
-                return units;
-            }
             for (int k = 0; k < cur.Count; k++)
             {
-                if (planUnits[k].Jamo != cur[k])
+                int fi = units + k;
+                if (fi >= _flat.Count || _flat[fi].Jamo != cur[k])
                 {
                     allCorrect = false;
                     return units;
@@ -127,5 +119,23 @@ public sealed class TypingSession
             units += cur.Count;
         }
         return units;
+    }
+
+    /// <summary>본보기글 i번째 글자의 형편 — 화면 색칠의 근거.</summary>
+    public CharState StateAt(int i)
+    {
+        string typed = Typed;
+        int composingLen = Composer.Composing.Length;
+        int fullChars = typed.Length - composingLen;
+
+        if (i < fullChars)
+            return i < Target.Length && typed[i] == Target[i] ? CharState.Correct : CharState.Wrong;
+
+        if (composingLen > 0 && i == fullChars)
+        {
+            CorrectUnits(out bool allCorrect);
+            return allCorrect ? CharState.Composing : CharState.Wrong;
+        }
+        return CharState.Untyped;
     }
 }

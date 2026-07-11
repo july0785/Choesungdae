@@ -10,7 +10,7 @@ namespace ChosonTyping.Views;
 
 /// <summary>
 /// 긴글련습·타자검정: 글을 줄 단위로 따라 친다. 막지 않고 있는 그대로 잰다(설계서 11.3).
-/// 검정이면 끝에 급수를 매긴다.
+/// 지난 줄·다음 줄이 가사처럼 흐르고, 검정이면 끝에 급수를 매긴다.
 /// </summary>
 public partial class LongTextView : UserControl
 {
@@ -70,7 +70,8 @@ public partial class LongTextView : UserControl
         TitleText.Text = $"{(_isTest ? "타자검정" : "긴글련습")} · {_module.Title} · {_index + 1}/{_lines.Count}줄";
         PrevLine.Text = _index > 0 ? _lines[_index - 1] : "";
         NextLine.Text = _index + 1 < _lines.Count ? _lines[_index + 1] : "";
-        HintText.Text = "넣기(Enter) = 다음 줄 · 틀려도 막지 않습니다";
+        NextLine2.Text = _index + 2 < _lines.Count ? _lines[_index + 2] : "";
+        ViewFx.SlideIn(LyricStack);
         Refresh();
     }
 
@@ -94,12 +95,17 @@ public partial class LongTextView : UserControl
 
         PrevLine.Text = "";
         TargetLine.Inlines.Clear();
-        TargetLine.Inlines.Add(new Run("끝!") { Foreground = (Brush)FindResource("Ink"), FontWeight = FontWeights.ExtraBold });
-        NextLine.Text = _isTest
-            ? $"타속 {cpm:0} 타/분 · 정확도 {acc:0} % — 판정: {Grade(cpm, acc)}"
-            : $"타속 {cpm:0} 타/분 · 정확도 {acc:0} %";
-        HintText.Text = "다시 — 넣기(Enter) · 글 고르기 — Esc";
+        TargetLine.Inlines.Add(new Run(_isTest ? $"판정 — {Grade(cpm, acc)}" : "끝!")
+        {
+            Foreground = (Brush)FindResource("Ink"),
+            FontWeight = FontWeights.ExtraBold,
+        });
+        TypedLine.Inlines.Clear();
+        TypedLine.Inlines.Add(new Run($"타속 {cpm:0} 타/분 · 정확도 {acc:0} %") { Foreground = (Brush)FindResource("Mid") });
+        NextLine.Text = "다시 — 넣기(Enter) · 글 고르기 — Esc";
+        NextLine2.Text = "";
         Kb.SetNext(null);
+        ViewFx.SlideIn(LyricStack);
         Stats.Update(cpm, acc, 100);
     }
 
@@ -159,20 +165,7 @@ public partial class LongTextView : UserControl
 
     void Refresh()
     {
-        string target = _session.Target;
-        string typed = _session.Typed;
-
-        TargetLine.Inlines.Clear();
-        for (int i = 0; i < target.Length; i++)
-        {
-            var run = new Run(target[i].ToString());
-            if (i < typed.Length)
-                run.Foreground = (Brush)FindResource(typed[i] == target[i] ? "Ink" : "Wrong");
-            else
-                run.Foreground = (Brush)FindResource("Faint");
-            TargetLine.Inlines.Add(run);
-        }
-
+        SentenceView.RenderLines(_session, TargetLine, TypedLine, this);
         var next = _session.NextKey();
         Kb.SetNext(next?.Token);
         UpdateStats();

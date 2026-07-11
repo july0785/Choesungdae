@@ -14,8 +14,6 @@
 
             <Button x:Name="ImportBtn" Style="{StaticResource AccentButton}" Content="불러오기 (.txt)"
                     HorizontalAlignment="Left" Margin="0,24,0,0" Padding="22,10" Click="Import_Click"/>
-            <TextBlock FontSize="12" Foreground="{DynamicResource Faint}" Margin="0,10,0,0"
-                       Text="불러온 글은 data\imported\ 에 전용형식(.ctp)으로 잠겨 저장되고, 다시 열 때마다 검사합니다."/>
         </StackPanel>
     </ScrollViewer>
 </UserControl>
