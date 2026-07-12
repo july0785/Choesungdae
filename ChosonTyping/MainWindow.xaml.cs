@@ -140,11 +140,11 @@ public partial class MainWindow : Window
         foreach (var (code, name) in Loc.Languages)
             PopupLangBar.Children.Add(Choice(name, code == Loc.Lang, () => SwitchLang(code)));
 
-        // 화면형식은 두쪽짜리 토글 — 켜진 쪽이 먹색으로 채워진다.
+        // 화면형식은 두쪽짜리 토글 — 밝은 쪽은 언제나 흰 바탕, 어두운 쪽은 언제나 검은 바탕.
         PopupThemeBar.Children.Clear();
         var seg = new StackPanel { Orientation = Orientation.Horizontal };
-        seg.Children.Add(SegChoice(Loc.S("theme.light"), App.ResolvedTheme == "light", () => SetTheme("light")));
-        seg.Children.Add(SegChoice(Loc.S("theme.dark"), App.ResolvedTheme == "dark", () => SetTheme("dark")));
+        seg.Children.Add(SegChoice(Loc.S("theme.light"), App.ResolvedTheme == "light", darkSwatch: false, () => SetTheme("light")));
+        seg.Children.Add(SegChoice(Loc.S("theme.dark"), App.ResolvedTheme == "dark", darkSwatch: true, () => SetTheme("dark")));
         PopupThemeBar.Children.Add(new Border
         {
             CornerRadius = new CornerRadius(9),
@@ -156,15 +156,18 @@ public partial class MainWindow : Window
         });
     }
 
-    Button SegChoice(string text, bool on, Action act)
+    Button SegChoice(string text, bool on, bool darkSwatch, Action act)
     {
         var b = new Button
         {
             Content = text,
             Style = (Style)FindResource("SegButton"),
-            Background = on ? (Brush)FindResource("Ink") : Brushes.Transparent,
-            Foreground = (Brush)FindResource(on ? "Paper" : "Mid"),
+            Background = new SolidColorBrush(darkSwatch ? Color.FromRgb(0x28, 0x2A, 0x2D) : Color.FromRgb(0xFB, 0xFC, 0xFE)),
+            Foreground = new SolidColorBrush(darkSwatch ? Color.FromRgb(0xEC, 0xED, 0xEF) : Color.FromRgb(0x1B, 0x1E, 0x24)),
             FontWeight = on ? FontWeights.Bold : FontWeights.Normal,
+            BorderBrush = on ? (Brush)FindResource("Accent") : Brushes.Transparent,
+            BorderThickness = new Thickness(1.5),
+            Opacity = on ? 1.0 : 0.65,
         };
         b.Click += (_, _) => act();
         return b;

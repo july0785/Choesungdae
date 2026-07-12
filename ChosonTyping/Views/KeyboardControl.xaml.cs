@@ -28,6 +28,7 @@ public partial class KeyboardControl : UserControl
 
     readonly Dictionary<string, Border> _keys = new();
     readonly List<Border> _shiftKeys = new();
+    readonly Dictionary<Border, DispatcherTimer> _flashTimers = new();
     Border? _next;
     bool _shiftLit;
 
@@ -41,6 +42,8 @@ public partial class KeyboardControl : UserControl
         Rows.Children.Clear();
         _keys.Clear();
         _shiftKeys.Clear();
+        foreach (var t in _flashTimers.Values) t.Stop();
+        _flashTimers.Clear();
         _next = null;
         _shiftLit = false;
         foreach (var row in PhysicalRows)
@@ -144,18 +147,29 @@ public partial class KeyboardControl : UserControl
             t.Foreground = (Brush)FindResource(soft ? "Mid" : (t.FontSize >= 18 ? "Ink" : "Faint"));
     }
 
-    /// <summary>친 글쇠는 잠깐(150ms) 회색 — 은은한 동작(설계서 7항).</summary>
+    /// <summary>
+    /// 친 글쇠는 잠깐(150ms) 회색 — 은은한 동작(설계서 7항).
+    /// 같은 글쇠를 연타하면 도는 타이머의 시간만 늘인다 — 누른 색을 원래 색으로
+    /// 잘못 기억해 자국이 남는 일(산성비 빠른 타자)이 없게.
+    /// </summary>
     public void Flash(string tok)
     {
         if (!_keys.TryGetValue(tok, out var bd) || bd == _next) return;
-        var old = bd.Background;
+        if (_flashTimers.TryGetValue(bd, out var running))
+        {
+            running.Stop();
+            running.Start();
+            return;
+        }
         bd.Background = (Brush)FindResource("Hair");
         var t = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(150) };
         t.Tick += (_, _) =>
         {
-            bd.Background = old;
             t.Stop();
+            _flashTimers.Remove(bd);
+            if (bd != _next) ResetKey(bd);   // 그새 다음 글쇠로 강조됐으면 그대로 둔다
         };
         t.Start();
+        _flashTimers[bd] = t;
     }
 }

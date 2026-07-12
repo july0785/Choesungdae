@@ -172,8 +172,7 @@ public partial class SentenceView : UserControl
         int n = Math.Max(target.Length, typed.Length);
         for (int i = 0; i < n; i++)
         {
-            if (i == typed.Length)
-                line.Inlines.Add(new Run("▏") { Foreground = (Brush)res.FindResource("Accent") });
+            if (i == typed.Length) line.Inlines.Add(Caret(line, res));
             if (i < typed.Length)
             {
                 bool wrong = session.StateAt(i) == CharState.Wrong;
@@ -187,9 +186,19 @@ public partial class SentenceView : UserControl
                 line.Inlines.Add(new Run(target[i].ToString()) { Foreground = (Brush)res.FindResource("Faint") });
             }
         }
-        if (typed.Length >= n)
-            line.Inlines.Add(new Run("▏") { Foreground = (Brush)res.FindResource("Accent") });
+        if (typed.Length >= n) line.Inlines.Add(Caret(line, res));
     }
+
+    /// <summary>깜박이 자리표 — 너비를 차지하지 않아 본보기글이 밀리지 않는다(글자 사이에 겹침).</summary>
+    static Inline Caret(TextBlock line, FrameworkElement res) =>
+        new InlineUIContainer(new Border
+        {
+            Width = 2,
+            Height = line.FontSize * 1.1,
+            Background = (Brush)res.FindResource("Accent"),
+            Margin = new Thickness(-1, 0, -1, 0),
+        })
+        { BaselineAlignment = BaselineAlignment.TextBottom };
 
     void UpdateStats()
     {
