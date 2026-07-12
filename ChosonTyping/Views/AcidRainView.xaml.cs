@@ -16,6 +16,7 @@ namespace ChosonTyping.Views;
 public partial class AcidRainView : UserControl
 {
     const int StartLives = 5;
+    const int KillsPerLevel = 6;   // 단계당 없앨 낱말수 — 자주 올라 체감되게
 
     readonly MainWindow _main;
     readonly KeyboardLayout _layout;
@@ -74,8 +75,9 @@ public partial class AcidRainView : UserControl
         };
     }
 
-    double Speed => 28 + 11 * _level;                       // px/초
-    double SpawnEvery => Math.Max(0.9, 2.4 - 0.15 * _level); // 초
+    // 단계가 오를수록 빨리 떨어지고 자주 쏟아진다. 1단계도 헐겁지 않게 시작.
+    double Speed => 58 + 15 * (_level - 1);                        // px/초 (1단계 58 → 5단계 118 → 10단계 193)
+    double SpawnEvery => Math.Max(0.45, 1.75 - 0.13 * (_level - 1)); // 초 (1단계 1.75 → 5단계 1.23 → 10단계 0.58)
 
     void Tick(object? sender, EventArgs e)
     {
@@ -113,10 +115,25 @@ public partial class AcidRainView : UserControl
         UpdateHud();
     }
 
+    /// <summary>낱말 하나 고르기. 단계가 오르면 두번 뽑아 더 긴 쪽을 택해 어려운 낱말이 자주 나오게.</summary>
+    string PickWord()
+    {
+        string w = _pool[_rng.Next(_pool.Count)];
+        if (_level >= 4)
+        {
+            string w2 = _pool[_rng.Next(_pool.Count)];
+            if (w2.Length > w.Length) w = w2;
+        }
+        return w;
+    }
+
     void Spawn()
     {
-        string word = _pool[_rng.Next(_pool.Count)];
+        // 화면에 이미 있는 낱말과 겹치지 않게 몇번 다시 뽑는다(생성 낭비 방지).
+        string word = PickWord();
+        for (int t = 0; t < 5 && _falling.Any(f => f.Word == word); t++) word = PickWord();
         if (_falling.Any(f => f.Word == word)) return;
+
         var block = new TextBlock
         {
             Text = word, FontSize = 20, FontWeight = FontWeights.SemiBold,
@@ -187,7 +204,11 @@ public partial class AcidRainView : UserControl
             _score += word.Length * 10;
             _kills++;
             _hitUnits += KeystrokePlanner.PlanText(word, _layout).Sum(u => u.Count);
-            if (_kills % 10 == 0) _level++;
+            if (_kills % KillsPerLevel == 0)
+            {
+                _level++;
+                FlashLevel();
+            }
             _composer = new HangulComposer();
             UpdateHud();
             return;
@@ -212,6 +233,28 @@ public partial class AcidRainView : UserControl
         UpdateHud();
     }
 
+    /// <summary>단계가 오른 순간 밭 가운데에 "단계 N"을 잠깐 띄워 진행이 느껴지게.</summary>
+    void FlashLevel()
+    {
+        var t = new TextBlock
+        {
+            Text = $"단계 {_level}",
+            FontSize = 46,
+            FontWeight = FontWeights.ExtraBold,
+            Foreground = (Brush)FindResource("Accent"),
+            IsHitTestVisible = false,
+        };
+        t.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+        double width = Math.Max(Field.ActualWidth, 400);
+        Canvas.SetLeft(t, (width - t.DesiredSize.Width) / 2);
+        Canvas.SetTop(t, Field.ActualHeight / 2 - 34);
+        Field.Children.Add(t);
+
+        var fade = new System.Windows.Media.Animation.DoubleAnimation(0.55, 0.0, TimeSpan.FromMilliseconds(1000));
+        fade.Completed += (_, _) => Field.Children.Remove(t);
+        t.BeginAnimation(OpacityProperty, fade);
+    }
+
     void RefreshInput() => InputText.Text = _composer.Text.Length == 0 ? " " : _composer.Text;
 
     void UpdateHud()
@@ -220,7 +263,7 @@ public partial class AcidRainView : UserControl
         ScoreText.Text = $"점수 {_score:N0} · 단계 {_level} · 목숨 {_lives} · 최고 {high:N0}";
         double cpm = TypingStats.Cpm(_strokes, _watch.Elapsed);
         double acc = _strokes == 0 ? 100 : Math.Min(100, _hitUnits * 100.0 / _strokes);
-        Stats.Update(cpm, acc, _kills % 10 * 10);
+        Stats.Update(cpm, acc, _kills % KillsPerLevel * (100.0 / KillsPerLevel));
     }
 
     void Back_Click(object sender, RoutedEventArgs e) => _main.Navigate(() => new StartView(_main));
