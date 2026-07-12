@@ -32,8 +32,11 @@
                         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock x:Name="VersionText" FontSize="12" Foreground="{DynamicResource Faint}"
                                        VerticalAlignment="Center" Margin="0,0,14,0"/>
-                            <Button x:Name="GearBtn" Style="{StaticResource CaptionButton}" Content="⚙"
-                                    FontSize="14" Click="GearBtn_Click"/>
+                            <Button x:Name="GearBtn" Style="{StaticResource CaptionButton}"
+                                    AutomationProperties.Name="설정" Click="GearBtn_Click">
+                                <Path Width="14" Height="14" Stretch="Uniform" Fill="{DynamicResource Mid}"
+                                      Data="M10.34,3.46 L9.81,0.71 14.19,0.71 13.66,3.46 16.87,4.79 18.43,2.47 21.53,5.57 19.21,7.13 20.54,10.34 23.29,9.81 23.29,14.19 20.54,13.66 19.21,16.87 21.53,18.43 18.43,21.53 16.87,19.21 13.66,20.54 14.19,23.29 9.81,23.29 10.34,20.54 7.13,19.21 5.57,21.53 2.47,18.43 4.79,16.87 3.46,13.66 0.71,14.19 0.71,9.81 3.46,10.34 4.79,7.13 2.47,5.57 5.57,2.47 7.13,4.79 Z M16.6,12 A4.6,4.6 0 1 1 7.4,12 A4.6,4.6 0 1 1 16.6,12 Z"/>
+                            </Button>
                             <Popup x:Name="SettingsPopup" AllowsTransparency="True" StaysOpen="False"
                                    PopupAnimation="Fade" PlacementTarget="{Binding ElementName=GearBtn}">
                                 <Grid Margin="14">

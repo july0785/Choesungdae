@@ -78,6 +78,25 @@
                 </Style.Triggers>
             </Style>
 
+            <!-- 토글의 한쪽 (설정 팝업 화면형식) -->
+            <Style x:Key="SegButton" TargetType="Button">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Padding" Value="12,4,12,5"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="7"
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
             <!-- 창머리 단추 (줄이기·키우기·닫기·낮밤) -->
             <Style x:Key="CaptionButton" TargetType="Button">
                 <Setter Property="Background" Value="Transparent"/>

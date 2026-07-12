@@ -139,9 +139,35 @@ public partial class MainWindow : Window
         PopupLangBar.Children.Clear();
         foreach (var (code, name) in Loc.Languages)
             PopupLangBar.Children.Add(Choice(name, code == Loc.Lang, () => SwitchLang(code)));
+
+        // 화면형식은 두쪽짜리 토글 — 켜진 쪽이 먹색으로 채워진다.
         PopupThemeBar.Children.Clear();
-        PopupThemeBar.Children.Add(Choice(Loc.S("theme.light"), App.ResolvedTheme == "light", () => SetTheme("light")));
-        PopupThemeBar.Children.Add(Choice(Loc.S("theme.dark"), App.ResolvedTheme == "dark", () => SetTheme("dark")));
+        var seg = new StackPanel { Orientation = Orientation.Horizontal };
+        seg.Children.Add(SegChoice(Loc.S("theme.light"), App.ResolvedTheme == "light", () => SetTheme("light")));
+        seg.Children.Add(SegChoice(Loc.S("theme.dark"), App.ResolvedTheme == "dark", () => SetTheme("dark")));
+        PopupThemeBar.Children.Add(new Border
+        {
+            CornerRadius = new CornerRadius(9),
+            BorderBrush = (Brush)FindResource("Hair"),
+            BorderThickness = new Thickness(1),
+            Padding = new Thickness(2),
+            Margin = new Thickness(8, 0, 0, 0),
+            Child = seg,
+        });
+    }
+
+    Button SegChoice(string text, bool on, Action act)
+    {
+        var b = new Button
+        {
+            Content = text,
+            Style = (Style)FindResource("SegButton"),
+            Background = on ? (Brush)FindResource("Ink") : Brushes.Transparent,
+            Foreground = (Brush)FindResource(on ? "Paper" : "Mid"),
+            FontWeight = on ? FontWeights.Bold : FontWeights.Normal,
+        };
+        b.Click += (_, _) => act();
+        return b;
     }
 
     Button Choice(string text, bool on, Action act)

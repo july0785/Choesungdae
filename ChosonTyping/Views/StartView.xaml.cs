@@ -92,17 +92,21 @@ public partial class StartView : UserControl
     {
         foreach (var layout in _layouts)
         {
-            var name = new TextBlock
+            var row = new StackPanel { Orientation = Orientation.Horizontal };
+            row.Children.Add(new TextBlock
             {
                 Text = Loc.S("layout." + layout.Id), FontSize = 16, FontWeight = FontWeights.Bold,
                 Foreground = (Brush)FindResource("Ink"),
-            };
-            var desc = new TextBlock
+            });
+            string sub = Loc.S("layout." + layout.Id + ".sub");
+            if (sub.Length > 0)
             {
-                Text = Loc.S("layout." + layout.Id + ".desc"),
-                FontSize = 12, Foreground = (Brush)FindResource("Mid"),
-                TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 4, 0, 0),
-            };
+                row.Children.Add(new TextBlock
+                {
+                    Text = sub, FontSize = 11, Foreground = (Brush)FindResource("Faint"),
+                    VerticalAlignment = VerticalAlignment.Bottom, Margin = new Thickness(8, 0, 0, 2),
+                });
+            }
             var dot = new Ellipse
             {
                 Width = 8, Height = 8, Fill = (Brush)FindResource("Sky"),
@@ -111,7 +115,7 @@ public partial class StartView : UserControl
                 Visibility = Visibility.Collapsed,
             };
             var grid = new Grid();
-            grid.Children.Add(new StackPanel { Children = { name, desc } });
+            grid.Children.Add(row);
             grid.Children.Add(dot);
 
             var card = new Border
