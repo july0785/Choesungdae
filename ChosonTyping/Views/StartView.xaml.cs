@@ -9,7 +9,7 @@ using ChosonTyping.Core;
 
 namespace ChosonTyping.Views;
 
-/// <summary>시작화면(설계서 6항): 화면 언어 · 건반배렬 고르기 · 련습단계 고르기.</summary>
+/// <summary>시작화면(설계서 6항): 큰 로고 · 건반배렬 고르기 · 련습단계 고르기.</summary>
 public partial class StartView : UserControl
 {
     static readonly string[] LayoutOrder = { "kukgyu", "changdeok", "dubeol-std" };
@@ -37,15 +37,12 @@ public partial class StartView : UserControl
             throw new InvalidDataException("data\\layouts 에서 배렬 화일을 찾을수 없습니다.");
         if (_layouts.All(l => l.Id != _selectedId)) _selectedId = _layouts[0].Id;
 
-        LangLabel.Text = Loc.S("settings.language");
-        ThemeLabel.Text = Loc.S("settings.theme");
+        CaptionText.Text = Loc.S("app.caption");
         LayoutsLabel.Text = Loc.S("start.layouts");
         StagesLabel.Text = Loc.S("start.stages");
         StartBtn.Content = Loc.S("start.begin");
 
         LoadBigLogo();
-        BuildLangBar();
-        BuildThemeBar();
         BuildCards();
         BuildStages();
     }
@@ -73,65 +70,23 @@ public partial class StartView : UserControl
         BigWordmark.Visibility = Visibility.Visible;
     }
 
-    void BuildLangBar()
-    {
-        foreach (var (code, name) in Loc.Languages)
-        {
-            bool cur = code == Loc.Lang;
-            var b = new Button
-            {
-                Content = name,
-                Style = (Style)FindResource("QuietButton"),
-                FontWeight = cur ? FontWeights.Bold : FontWeights.Normal,
-                Foreground = (Brush)FindResource(cur ? "Accent" : "Mid"),
-                Margin = new Thickness(8, 0, 0, 0),
-            };
-            string c = code;
-            b.Click += (_, _) => SwitchLang(c);
-            LangBar.Children.Add(b);
-        }
-    }
+    // ── 로고 비행(MainWindow.Navigate가 쓴다) ─────────
 
-    void SwitchLang(string code)
-    {
-        if (code == Loc.Lang) return;
-        Loc.Lang = code;
-        var config = AppConfig.Load();
-        config.Lang = code;
-        config.Save();
-        _main.ApplyChrome();
-        _main.Navigate(() => new StartView(_main));  // 새 언어로 다시 그림
-    }
+    /// <summary>비행에 쓸 로고 그림. 그림이 없이 글자면 null(비행 없이 그냥 바뀜).</summary>
+    public ImageSource? HeroSource =>
+        BigLogo.Visibility == Visibility.Visible ? BigLogo.Source : null;
 
-    void BuildThemeBar()
-    {
-        (string code, string key)[] opts = { ("light", "theme.light"), ("dark", "theme.dark") };
-        foreach (var (code, key) in opts)
-        {
-            bool on = code == App.ResolvedTheme;
-            var b = new Button
-            {
-                Content = Loc.S(key),
-                Style = (Style)FindResource("QuietButton"),
-                FontWeight = on ? FontWeights.Bold : FontWeights.Normal,
-                Foreground = (Brush)FindResource(on ? "Accent" : "Mid"),
-                Margin = new Thickness(8, 0, 0, 0),
-            };
-            string c = code;
-            b.Click += (_, _) => SetTheme(c);
-            ThemeBar.Children.Add(b);
-        }
-    }
+    /// <summary>큰 로고의 자리 — relativeTo 좌표계로.</summary>
+    public Rect? HeroRect(UIElement relativeTo) =>
+        BigLogo.Visibility == Visibility.Visible && BigLogo.ActualWidth > 1
+            ? new Rect(BigLogo.TranslatePoint(new Point(), relativeTo),
+                       new Size(BigLogo.ActualWidth, BigLogo.ActualHeight))
+            : null;
 
-    void SetTheme(string code)
-    {
-        if (code == App.ResolvedTheme) return;
-        var config = AppConfig.Load();
-        config.Theme = code;
-        config.Save();
-        App.ApplyTheme(code);
-        _main.Navigate(() => new StartView(_main));  // 새 화면형식으로 다시 그림
-    }
+    public void HideHeroLogo() => BigLogo.Opacity = 0;
+    public void ShowHeroLogo() => BigLogo.Opacity = 1;
+
+    // ── 배렬 카드 ────────────────────────────────────
 
     void BuildCards()
     {
@@ -194,6 +149,8 @@ public partial class StartView : UserControl
             config.Save();
         }
     }
+
+    // ── 련습단계 목록 ────────────────────────────────
 
     void BuildStages()
     {

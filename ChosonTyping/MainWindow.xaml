@@ -13,26 +13,66 @@
 
     <Border x:Name="Shell" BorderBrush="{DynamicResource Hair}" BorderThickness="1,0,1,1"
             Background="{DynamicResource Paper}">
-        <DockPanel>
-            <!-- 창머리: 프로그람이 창을 통째로 덮는다 — 끌기·줄이기·키우기·닫기 (경계선 없음) -->
-            <Border DockPanel.Dock="Top" Padding="16,10,10,10"
-                    Background="{DynamicResource Paper}"
-                    MouseLeftButtonDown="AppBar_MouseDown">
-                <DockPanel>
-                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock x:Name="VersionText" FontSize="12" Foreground="{DynamicResource Faint}"
-                                   VerticalAlignment="Center" Margin="0,0,18,0"/>
-                        <Button x:Name="MinBtn" Style="{StaticResource CaptionButton}" Content="─"
-                                Click="MinBtn_Click"/>
-                        <Button x:Name="MaxBtn" Style="{StaticResource CaptionButton}" Content="□"
-                                Click="MaxBtn_Click"/>
-                        <Button x:Name="CloseBtn" Style="{StaticResource CloseButton}" Content="✕"
-                                Click="CloseBtn_Click"/>
-                    </StackPanel>
-                    <Border/>
-                </DockPanel>
-            </Border>
-            <ContentControl x:Name="Host"/>
-        </DockPanel>
+        <Grid>
+            <DockPanel>
+                <!-- 창머리: 왼쪽엔 련습 중에만 보이는 작은 로고, 오른쪽엔 판·설정·창단추 (경계선 없음) -->
+                <Border DockPanel.Dock="Top" Padding="16,10,10,10"
+                        Background="{DynamicResource Paper}"
+                        MouseLeftButtonDown="AppBar_MouseDown">
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image x:Name="LogoImage" Height="26" Visibility="Hidden"
+                                   RenderOptions.BitmapScalingMode="HighQuality" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="WordmarkText" FontSize="15" FontWeight="ExtraBold"
+                                       Foreground="{DynamicResource Ink}" VerticalAlignment="Center"
+                                       Visibility="Collapsed">
+                                <Run Text="최승대"/><Run Text="." Foreground="{DynamicResource Accent}"/>
+                            </TextBlock>
+                        </StackPanel>
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock x:Name="VersionText" FontSize="12" Foreground="{DynamicResource Faint}"
+                                       VerticalAlignment="Center" Margin="0,0,14,0"/>
+                            <Button x:Name="GearBtn" Style="{StaticResource CaptionButton}" Content="⚙"
+                                    FontSize="14" Click="GearBtn_Click"/>
+                            <Popup x:Name="SettingsPopup" AllowsTransparency="True" StaysOpen="False"
+                                   PopupAnimation="Fade" PlacementTarget="{Binding ElementName=GearBtn}">
+                                <Grid Margin="14">
+                                    <Border CornerRadius="12" Background="{DynamicResource Paper}"
+                                            BorderBrush="{DynamicResource Hair}" BorderThickness="1">
+                                        <Border.Effect>
+                                            <DropShadowEffect BlurRadius="16" ShadowDepth="2" Opacity="0.3"/>
+                                        </Border.Effect>
+                                    </Border>
+                                    <Border CornerRadius="12" Padding="18,15,18,16">
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,9">
+                                                <TextBlock x:Name="PopupLangLabel" Style="{StaticResource Label}"
+                                                           Width="76" VerticalAlignment="Center"/>
+                                                <StackPanel x:Name="PopupLangBar" Orientation="Horizontal"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock x:Name="PopupThemeLabel" Style="{StaticResource Label}"
+                                                           Width="76" VerticalAlignment="Center"/>
+                                                <StackPanel x:Name="PopupThemeBar" Orientation="Horizontal"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </Popup>
+                            <Button x:Name="MinBtn" Style="{StaticResource CaptionButton}" Content="─"
+                                    Click="MinBtn_Click"/>
+                            <Button x:Name="MaxBtn" Style="{StaticResource CaptionButton}" Content="□"
+                                    Click="MaxBtn_Click"/>
+                            <Button x:Name="CloseBtn" Style="{StaticResource CloseButton}" Content="✕"
+                                    Click="CloseBtn_Click"/>
+                        </StackPanel>
+                        <Border/>
+                    </DockPanel>
+                </Border>
+                <ContentControl x:Name="Host"/>
+            </DockPanel>
+            <!-- 화면 전환 때 로고가 날아가는 덮개층 -->
+            <Canvas x:Name="Fx" IsHitTestVisible="False"/>
+        </Grid>
     </Border>
 </Window>

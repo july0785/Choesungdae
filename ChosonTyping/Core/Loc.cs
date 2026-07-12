@@ -25,8 +25,9 @@ public static class Loc
     // key => [조선어, English, 日本語]
     static readonly Dictionary<string, string[]> Table = new()
     {
-        ["app.version"]      = new[] { "판 1.0 · 포터블", "v1.0 · Portable", "版1.0 · ポータブル" },
-        ["tip.theme"]        = new[] { "밝은 화면형식 / 어두운 화면형식", "Light / Dark", "明るい / 暗い" },
+        ["app.version"]      = new[] { "판 1.0", "v1.0", "版1.0" },
+        ["app.caption"]      = new[] { "건반 익히기 프로그람", "Keyboard trainer", "キーボード練習プログラム" },
+        ["tip.settings"]     = new[] { "설정", "Settings", "設定" },
         ["tip.min"]          = new[] { "줄이기", "Minimize", "最小化" },
         ["tip.max"]          = new[] { "키우기", "Maximize", "最大化" },
         ["tip.close"]        = new[] { "닫기", "Close", "閉じる" },
@@ -41,13 +42,8 @@ public static class Loc
         ["stats.unit"]       = new[] { "타/분", "kpm", "打/分" },
         ["stats.progress"]   = new[] { "진행률 {0}%", "Progress {0}%", "進行率 {0}%" },
 
-        ["start.title"]      = new[] { "오늘도 한 글쇠씩.", "One key at a time.", "今日も一鍵ずつ。" },
-        ["start.sub"]        = new[] { "건반배렬을 고르고, 련습단계를 골라 시작하십시오.",
-                                       "Pick a keyboard layout and a stage to begin.",
-                                       "配列と練習段階を選んで始めてください。" },
         ["start.layouts"]    = new[] { "건반배렬", "Keyboard layout", "キーボード配列" },
         ["start.stages"]     = new[] { "련습단계", "Practice stage", "練習段階" },
-        ["start.language"]   = new[] { "화면 언어", "Display language", "表示言語" },
         ["start.begin"]      = new[] { "련습 시작", "Start", "練習開始" },
         ["start.soon"]       = new[] { "준비중", "Soon", "準備中" },
         ["settings.language"]= new[] { "언어", "Language", "言語" },
@@ -63,7 +59,7 @@ public static class Loc
         ["layout.changdeok.desc"]= new[] { "겹모음 아홉을 가장자리 글쇠 하나로",
                                            "Nine compound vowels, one edge key each",
                                            "二重母音九つを端の一鍵で" },
-        ["layout.dubeol-std"]    = new[] { "대한민국 표준건반", "Dubeolsik (standard)", "2ボル式標準" },
+        ["layout.dubeol-std"]    = new[] { "대한민국 표준건반", "ROK Keyboard (KS X 5002)", "ROK Keyboard (KS X 5002)" },
         ["layout.dubeol-std.desc"]=new[] { "대한민국 표준 배렬", "South Korean standard", "韓国標準配列" },
 
         ["stage.drill"]      = new[] { "자리련습", "Key positions", "位置練習" },

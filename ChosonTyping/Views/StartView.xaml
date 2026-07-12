@@ -2,35 +2,19 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="40,10,40,40">
+        <StackPanel Margin="40,6,40,40">
 
-            <!-- 머리: 큰 로고는 가운데, 설정(언어·화면형식)은 오른쪽 우 -->
-            <Grid MinHeight="150" Margin="0,0,0,14">
-                <Image x:Name="BigLogo" Height="110" HorizontalAlignment="Center" VerticalAlignment="Center"
+            <!-- 머리: 큰 로고와 프로그람 이름 -->
+            <StackPanel Margin="0,8,0,24" HorizontalAlignment="Center">
+                <Image x:Name="BigLogo" Height="110" HorizontalAlignment="Center"
                        Visibility="Collapsed" RenderOptions.BitmapScalingMode="HighQuality"/>
-                <TextBlock x:Name="BigWordmark" FontSize="66" FontWeight="ExtraBold"
+                <TextBlock x:Name="BigWordmark" FontSize="64" FontWeight="ExtraBold"
                            Foreground="{DynamicResource Ink}" Visibility="Collapsed"
-                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-                <Border x:Name="SettingsCard" HorizontalAlignment="Right" VerticalAlignment="Top"
-                        CornerRadius="12" BorderBrush="{DynamicResource Hair}" BorderThickness="1"
-                        Background="{DynamicResource Soft}" Padding="16,13,16,14">
-                    <StackPanel>
-                        <TextBlock Text="⚙" FontSize="14" Foreground="{DynamicResource Faint}"
-                                   Margin="0,0,0,9"/>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,7">
-                            <TextBlock x:Name="LangLabel" Style="{StaticResource Label}"
-                                       Width="76" VerticalAlignment="Center"/>
-                            <StackPanel x:Name="LangBar" Orientation="Horizontal"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock x:Name="ThemeLabel" Style="{StaticResource Label}"
-                                       Width="76" VerticalAlignment="Center"/>
-                            <StackPanel x:Name="ThemeBar" Orientation="Horizontal"/>
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-            </Grid>
+                           HorizontalAlignment="Center"/>
+                <TextBlock x:Name="CaptionText" FontSize="16" FontWeight="ExtraBold"
+                           Foreground="{DynamicResource Ink}" HorizontalAlignment="Center"
+                           Margin="0,12,0,0"/>
+            </StackPanel>
 
             <TextBlock x:Name="LayoutsLabel" Style="{StaticResource Label}" Margin="0,0,0,10"/>
             <UniformGrid x:Name="LayoutCards" Columns="3"/>
