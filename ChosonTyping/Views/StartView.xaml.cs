@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using ChosonTyping.Core;
 
@@ -36,16 +37,40 @@ public partial class StartView : UserControl
             throw new InvalidDataException("data\\layouts 에서 배렬 화일을 찾을수 없습니다.");
         if (_layouts.All(l => l.Id != _selectedId)) _selectedId = _layouts[0].Id;
 
-        LangLabel.Text = Loc.S("start.language");
-        TitleText.Text = Loc.S("start.title");
-        SubText.Text = Loc.S("start.sub");
+        LangLabel.Text = Loc.S("settings.language");
+        ThemeLabel.Text = Loc.S("settings.theme");
         LayoutsLabel.Text = Loc.S("start.layouts");
         StagesLabel.Text = Loc.S("start.stages");
         StartBtn.Content = Loc.S("start.begin");
 
+        LoadBigLogo();
         BuildLangBar();
+        BuildThemeBar();
         BuildCards();
         BuildStages();
+    }
+
+    /// <summary>큰 로고 — 밝은 화면형식엔 검은 로고, 어두운 화면형식엔 흰 로고. 없으면 글자로.</summary>
+    void LoadBigLogo()
+    {
+        try
+        {
+            string name = App.ResolvedTheme == "dark" ? "logo-white" : "logo-black";
+            foreach (var ext in new[] { ".png", ".ico" })
+            {
+                var p = System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", name + ext);
+                if (File.Exists(p))
+                {
+                    BigLogo.Source = BitmapFrame.Create(new Uri(p),
+                        BitmapCreateOptions.IgnoreImageCache, BitmapCacheOption.OnLoad);
+                    BigLogo.Visibility = Visibility.Visible;
+                    return;
+                }
+            }
+        }
+        catch { /* 로고가 깨지면 글자로 */ }
+        BigWordmark.Text = "최승대";
+        BigWordmark.Visibility = Visibility.Visible;
     }
 
     void BuildLangBar()
@@ -76,6 +101,36 @@ public partial class StartView : UserControl
         config.Save();
         _main.ApplyChrome();
         _main.Navigate(() => new StartView(_main));  // 새 언어로 다시 그림
+    }
+
+    void BuildThemeBar()
+    {
+        (string code, string key)[] opts = { ("light", "theme.light"), ("dark", "theme.dark") };
+        foreach (var (code, key) in opts)
+        {
+            bool on = code == App.ResolvedTheme;
+            var b = new Button
+            {
+                Content = Loc.S(key),
+                Style = (Style)FindResource("QuietButton"),
+                FontWeight = on ? FontWeights.Bold : FontWeights.Normal,
+                Foreground = (Brush)FindResource(on ? "Accent" : "Mid"),
+                Margin = new Thickness(8, 0, 0, 0),
+            };
+            string c = code;
+            b.Click += (_, _) => SetTheme(c);
+            ThemeBar.Children.Add(b);
+        }
+    }
+
+    void SetTheme(string code)
+    {
+        if (code == App.ResolvedTheme) return;
+        var config = AppConfig.Load();
+        config.Theme = code;
+        config.Save();
+        App.ApplyTheme(code);
+        _main.Navigate(() => new StartView(_main));  // 새 화면형식으로 다시 그림
     }
 
     void BuildCards()

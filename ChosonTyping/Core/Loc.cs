@@ -50,6 +50,10 @@ public static class Loc
         ["start.language"]   = new[] { "화면 언어", "Display language", "表示言語" },
         ["start.begin"]      = new[] { "련습 시작", "Start", "練習開始" },
         ["start.soon"]       = new[] { "준비중", "Soon", "準備中" },
+        ["settings.language"]= new[] { "언어", "Language", "言語" },
+        ["settings.theme"]   = new[] { "화면형식", "Theme", "画面形式" },
+        ["theme.light"]      = new[] { "밝은", "Light", "明るい" },
+        ["theme.dark"]       = new[] { "어두운", "Dark", "暗い" },
 
         ["layout.kukgyu"]        = new[] { "국규건반", "Kukgyu (KPS 9256)", "国規キーボード" },
         ["layout.kukgyu.desc"]   = new[] { "KPS 9256 · 왼손 자음, 오른손 모음",
@@ -59,8 +63,8 @@ public static class Loc
         ["layout.changdeok.desc"]= new[] { "겹모음 아홉을 가장자리 글쇠 하나로",
                                            "Nine compound vowels, one edge key each",
                                            "二重母音九つを端の一鍵で" },
-        ["layout.dubeol-std"]    = new[] { "두벌식 표준", "Dubeolsik (standard)", "2ボル式標準" },
-        ["layout.dubeol-std.desc"]=new[] { "남측 표준 배렬", "South Korean standard", "韓国標準配列" },
+        ["layout.dubeol-std"]    = new[] { "대한민국 표준건반", "Dubeolsik (standard)", "2ボル式標準" },
+        ["layout.dubeol-std.desc"]=new[] { "대한민국 표준 배렬", "South Korean standard", "韓国標準配列" },
 
         ["stage.drill"]      = new[] { "자리련습", "Key positions", "位置練習" },
         ["stage.drill.desc"] = new[] { "글쇠자리를 눈에 익히고 손에 익힙니다",

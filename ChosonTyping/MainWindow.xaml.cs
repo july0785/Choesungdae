@@ -18,7 +18,6 @@ public partial class MainWindow : Window
             Shell.Margin = WindowState == WindowState.Maximized ? new Thickness(7) : new Thickness(0);
         ApplyTaskbarIcon();
         ApplyChrome();
-        UpdateLogo();
         Navigate(() => new Views.StartView(this));
         if (App.StartupStage is int stage) NavigateStage(stage);
     }
@@ -56,7 +55,6 @@ public partial class MainWindow : Window
     public void ApplyChrome()
     {
         VersionText.Text = Loc.S("app.version");
-        ThemeBtn.ToolTip = Loc.S("tip.theme");
         MinBtn.ToolTip = Loc.S("tip.min");
         MaxBtn.ToolTip = Loc.S("tip.max");
         CloseBtn.ToolTip = Loc.S("tip.close");
@@ -89,28 +87,6 @@ public partial class MainWindow : Window
         }
     }
 
-    /// <summary>창머리 로고 — 밝은 화면형식엔 검은 로고, 어두운 화면형식엔 흰 로고. 없으면 글자 워드마크.</summary>
-    public void UpdateLogo()
-    {
-        try
-        {
-            var path = FindAsset(App.ResolvedTheme == "dark" ? "logo-white" : "logo-black");
-            if (path is not null)
-            {
-                LogoImage.Source = BitmapFrame.Create(new Uri(path), BitmapCreateOptions.IgnoreImageCache, BitmapCacheOption.OnLoad);
-                LogoImage.Visibility = Visibility.Visible;
-                WordmarkText.Visibility = Visibility.Collapsed;
-                return;
-            }
-        }
-        catch (Exception)
-        {
-            // 로고가 깨지면 글자 워드마크로.
-        }
-        LogoImage.Visibility = Visibility.Collapsed;
-        WordmarkText.Visibility = Visibility.Visible;
-    }
-
     void AppBar_MouseDown(object sender, MouseButtonEventArgs e)
     {
         if (e.ClickCount == 2)
@@ -123,16 +99,6 @@ public partial class MainWindow : Window
 
     void ToggleMaximize() =>
         WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
-
-    void ThemeBtn_Click(object sender, RoutedEventArgs e)
-    {
-        var config = AppConfig.Load();
-        config.Theme = App.ResolvedTheme == "dark" ? "light" : "dark";
-        config.Save();
-        App.ApplyTheme(config.Theme);
-        UpdateLogo();
-        if (_factory is not null) Host.Content = _factory();
-    }
 
     void MinBtn_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
 
